@@ -1,0 +1,37 @@
+{
+  "body": "file1 body",
+  "resource": "/files/python/{proxy+}",
+  "path": "/files/python/file1",
+  "httpMethod": "PUT",
+  "pathParameters": {
+    "proxy": "file1"
+  },
+  "headers": null,
+  "multiValueHeaders": null,
+  "queryStringParameters": null,
+  "multiValueQueryStringParameters": null,
+  "stageVariables": null,
+  "requestContext": {
+    "path": "/files/python/{proxy+}",
+    "accountId": "686094824109",
+    "resourceId": "736pcw",
+    "stage": "test-invoke-stage",
+    "domainPrefix": "testPrefix",
+    "requestId": "8a1a5cea-e730-11e8-bd91-377e7080b38f",
+    "identity": {
+      "cognitoIdentityPoolId": null,
+      "cognitoIdentityId": null,
+      "apiKey": "test-invoke-api-key",
+      "cognitoAuthenticationType": null,
+      "userArn": "arn:aws:iam::686094824109:root",
+      "apiKeyId": "test-invoke-api-key-id",
+      "userAgent": "aws-internal/3 aws-sdk-java/1.11.432 Linux/4.9.124-0.1.ac.198.71.329.metal1.x86_64 OpenJDK_64-Bit_Server_VM/25.181-b13 java/1.8.0_181",
+      "accountId": "686094824109",
+      "caller": "686094824109",
+      "sourceIp": "test-invoke-source-ip",
+      "accessKey": "ASIAZ7PTQGKWQVVTZCV5",
+      "cognitoAuthenticationProvider": null,
+      "user": "686094824109"
+    }
+  }
+}

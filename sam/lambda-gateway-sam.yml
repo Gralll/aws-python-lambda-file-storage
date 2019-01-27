@@ -1,0 +1,177 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: API for S3 file service
+
+Resources:
+  S3FileServiceApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: dev
+      Name: "S3FileServiceApi-dev-euw1"
+      EndpointConfiguration: REGIONAL
+      DefinitionBody:
+          swagger: "2.0"
+          info:
+            version: "2016-12-09T04:29:17Z"
+            title: s3_file_service
+          basePath: "/dev"
+          schemes:
+          - "https"
+          paths:
+            /files/python:
+              x-amazon-apigateway-any-method:
+                produces:
+                  - "application/json"
+                security:
+                  - sigv4: []
+                x-amazon-apigateway-integration:
+                  uri:
+                    Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${S3FileServiceFunctionPy.Arn}/invocations
+                  passthroughBehavior: "when_no_match"
+                  httpMethod: "POST"
+                  type: "aws_proxy"
+            /files/python/{proxy+}:
+              x-amazon-apigateway-any-method:
+                produces:
+                - "application/json"
+                security:
+                  - sigv4: []
+                parameters:
+                - name: "proxy"
+                  in: "path"
+                  required: false
+                  type: "string"
+                x-amazon-apigateway-integration:
+                  uri:
+                    Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${S3FileServiceFunctionPy.Arn}/invocations
+                  passthroughBehavior: "when_no_match"
+                  httpMethod: "POST"
+                  type: "aws_proxy"
+            /files/java/{proxy+}:
+              x-amazon-apigateway-any-method:
+                produces:
+                - "application/json"
+                security:
+                  - sigv4: []
+                parameters:
+                - name: "proxy"
+                  in: "path"
+                  required: false
+                  type: "string"
+                x-amazon-apigateway-integration:
+                  uri:
+                    Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${S3FileServiceFunctionJava.Arn}/invocations
+                  passthroughBehavior: "when_no_match"
+                  httpMethod: "POST"
+                  type: "aws_proxy"
+            /files/java:
+              x-amazon-apigateway-any-method:
+                produces:
+                  - "application/json"
+                security:
+                  - sigv4: []
+                x-amazon-apigateway-integration:
+                  uri:
+                    Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${S3FileServiceFunctionJava.Arn}/invocations
+                  passthroughBehavior: "when_no_match"
+                  httpMethod: "POST"
+                  type: "aws_proxy"
+          securityDefinitions:
+            sigv4:
+              type: "apiKey"
+              name: "Authorization"
+              in: "header"
+              x-amazon-apigateway-authtype: "awsSigv4"
+          x-amazon-apigateway-policy:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Principal:
+                  AWS:
+                    - "arn:aws:iam::686094824109:root"
+                    - "arn:aws:iam::686094824109:user/Alexandr_Gruzdev"
+                Action: "execute-api:Invoke"
+                Resource: "arn:aws:execute-api:*:*:*/dev/*/*"
+          definitions:
+            Empty:
+              type: "object"
+              title: "Empty Schema"
+
+
+  S3FileServiceFunctionPy:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../src/main/python
+      Handler: s3_file_service.lambda_handler
+      Runtime: python3.6
+      Timeout: 10
+      Events:
+        ProxyResource:
+          Type: Api
+          Properties:
+            RestApiId: !Ref S3FileServiceApi
+            Path: /files/python/{proxy+}
+            Method: ANY
+        GetResource:
+          Type: Api
+          Properties:
+            RestApiId: !Ref S3FileServiceApi
+            Path: /files/python
+            Method: ANY
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Action:
+                - 's3:*'
+              Resource:
+                - "arn:aws:s3:::s3-file-service-storage-dev-euw1/*"
+                - "arn:aws:s3:::s3-file-service-storage-dev-euw1"
+              Effect: Allow
+
+  S3FileServiceFunctionJava:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri:
+        Bucket:
+          Fn::Sub: file-service-function-dev-euw1
+        Key:
+          Fn::Sub: aws-sam-lambda-1.0-SNAPSHOT.zip
+      Handler: com.gralll.aws.lambda.S3LambdaHandler::handleRequest
+      Runtime: java8
+      Timeout: 10
+      Events:
+        ProxyResource:
+          Type: Api
+          Properties:
+            RestApiId: !Ref S3FileServiceApi
+            Path: /files/java/{proxy+}
+            Method: ANY
+        GetResource:
+          Type: Api
+          Properties:
+            RestApiId: !Ref S3FileServiceApi
+            Path: /files/java
+            Method: ANY
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Action:
+                - 's3:*'
+              Resource:
+                - "arn:aws:s3:::s3-file-service-storage-dev-euw1/*"
+                - "arn:aws:s3:::s3-file-service-storage-dev-euw1"
+              Effect: Allow
+
+Outputs:
+  RestAPIID:
+    Description: Rest API ID
+    Value: !Ref S3FileServiceApi
+  S3FileServiceApiUrl:
+    Description: URL of API endpoint
+    Value: !Join
+      - ''
+      - - !Ref S3FileServiceApi
+        - '.execute-api.'
+        - !Ref 'AWS::Region'
+        - '.amazonaws.com'

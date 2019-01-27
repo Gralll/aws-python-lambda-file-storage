@@ -1,0 +1,39 @@
+{
+  "resource": "/{proxy+}",
+  "path": "/awsdad",
+  "httpMethod": "POST",
+  "headers": {},
+  "queryStringParameters": {},
+  "pathParameters": {
+    "proxy": "awsdad"
+  },
+  "stageVariables": {},
+  "requestContext": {
+    "path": "/{proxy+}",
+    "accountId": "686094824109",
+    "resourceId": "lo01fu",
+    "stage": "test-invoke-stage",
+    "requestId": "6a53d6c3-af6f-11e8-8898-a526d59b9bdf",
+    "identity": {
+      "cognitoIdentityPoolId": {},
+      "cognitoIdentityId": {},
+      "apiKey": "test-invoke-api-key",
+      "cognitoAuthenticationType": {},
+      "userArn": "arn:aws:iam::686094824109:user/Alexandr_Gruzdev",
+      "apiKeyId": "test-invoke-api-key-id",
+      "userAgent": "aws-internal/3 aws-sdk-java/1.11.347 Linux/4.9.110-0.1.ac.201.71.329.metal1.x86_64 Java_HotSpot(TM)_64-Bit_Server_VM/25.172-b31 java/1.8.0_172",
+      "accountId": "686094824109",
+      "caller": "AIDAII3W2HZ7NZBGCNONS",
+      "sourceIp": "test-invoke-source-ip",
+      "accessKey": "ASIAZ7PTQGKW7A5VHD6S",
+      "cognitoAuthenticationProvider": {},
+      "user": "AIDAII3W2HZ7NZBGCNONS"
+    },
+    "resourcePath": "/{proxy+}",
+    "httpMethod": "POST",
+    "extendedRequestId": "MpHneG_nDoEFwaw=",
+    "apiId": "8qi2mo8jkj"
+  },
+  "body": {},
+  "isBase64Encoded": "False"
+}
